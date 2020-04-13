@@ -2,9 +2,9 @@ spring:
   profiles:
     active: dev
   security:
-    jwtToken: xWEd5rPXJSU=
+    jwt-token: xWEd5rPXJSU=
   datasource:
-    url: postgresql://localhost:5432/local
+    url: jdbc:postgresql://localhost:5432/local
     username: localUser
     password: localUser
     driver-class-name: org.postgresql.Driver

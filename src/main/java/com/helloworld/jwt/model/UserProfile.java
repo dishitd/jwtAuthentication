@@ -2,12 +2,8 @@ package com.helloworld.jwt.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
@@ -16,6 +12,7 @@ import java.io.Serializable;
 @Table(name = "USER_PROFILE")
 public class UserProfile implements Serializable {
 
+    @Id
     private Long userId;
 
     @Column(nullable = false)
