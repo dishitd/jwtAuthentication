@@ -6,7 +6,8 @@ CREATE ROLE "localUser" NOSUPERUSER NOCREATEDB CREATEROLE NOINHERIT LOGIN PASSWO
 GRANT CREATE ON SCHEMA pms TO "localUser";
 GRANT USAGE ON SCHEMA pms TO "localUser";
 
-ALTER ROLE "localUser" NOSUPERUSER NOCREATEDB CREATEROLE NOINHERIT LOGIN;
+GRANT ALL ON TABLE pms.user_profile TO "localUser";
+GRANT ALL ON TABLE pms."user" TO "localUser";
 
 CREATE TABLE pms."user" (
 	id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
@@ -18,10 +19,10 @@ ALTER TABLE pms."user" ADD CONSTRAINT user_pk PRIMARY KEY (id);
 
 CREATE TABLE pms.user_profile (
 	user_id smallint NOT NULL,
-	"role" varchar NOT NULL,
-	CONSTRAINT user_profile_fk FOREIGN KEY (user_id) REFERENCES pms."user"(id) ON DELETE CASCADE
-);
+	"role" varchar NOT NULL
+	);
 
+ALTER TABLE pms."user_profile" ADD CONSTRAINT user_pk PRIMARY KEY (id);
 -- Column comments
 
 COMMENT ON COLUMN pms.user_profile."role" IS 'user role such as admin, user';

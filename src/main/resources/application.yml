@@ -4,7 +4,7 @@ spring:
   security:
     jwt-token: xWEd5rPXJSU=
   datasource:
-    url: jdbc:postgresql://localhost:5432/local
+    url: jdbc:postgresql://localhost:5432/local?currentSchema=pms
     username: localUser
     password: localUser
     driver-class-name: org.postgresql.Driver
@@ -12,6 +12,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update # When you launch the application for the first time - switch "none" at "create"
+      use-new-id-generator-mappings: false
     show-sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
