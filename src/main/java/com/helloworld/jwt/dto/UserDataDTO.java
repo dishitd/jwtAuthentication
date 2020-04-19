@@ -1,9 +1,7 @@
 package com.helloworld.jwt.dto;
 
-import java.util.List;
-
+import java.util.Set;
 import io.swagger.annotations.ApiModelProperty;
-import com.helloworld.jwt.model.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,5 +14,5 @@ public class UserDataDTO {
     @ApiModelProperty(position = 1)
     private String password;
     @ApiModelProperty(position = 2)
-    List<Role> roles;
+    Set<String> userRoles;
 }

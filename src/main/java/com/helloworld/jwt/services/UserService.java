@@ -3,7 +3,10 @@ package com.helloworld.jwt.services;
 import com.helloworld.jwt.exception.CustomException;
 import com.helloworld.jwt.model.User;
 import com.helloworld.jwt.repository.UserRepository;
+import com.helloworld.jwt.security.IsAdmin;
+import com.helloworld.jwt.security.IsViewer;
 import com.helloworld.jwt.security.JwtTokenProvider;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
+@Setter
 public class UserService {
 
     @Autowired
@@ -32,7 +36,7 @@ public class UserService {
     public String signin(String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
+            return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getUserRoles());
         } catch (AuthenticationException e) {
             throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -42,7 +46,7 @@ public class UserService {
         if (!userRepository.existsByUsername(user.getUsername())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
-            return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+            return jwtTokenProvider.createToken(user.getUsername(), user.getUserRoles());
         } else {
             throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -52,6 +56,7 @@ public class UserService {
         userRepository.deleteByUsername(username);
     }
 
+    @IsViewer
     public User search(String username) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -60,12 +65,13 @@ public class UserService {
         return user;
     }
 
+    @IsAdmin
     public User whoami(HttpServletRequest req) {
         return userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
     }
 
     public String refresh(String username) {
-        return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
+        return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getUserRoles());
     }
 
 }

@@ -3,6 +3,7 @@ package com.helloworld.jwt.controller;
 import com.helloworld.jwt.dto.UserDataDTO;
 import com.helloworld.jwt.dto.UserResponseDTO;
 import com.helloworld.jwt.model.User;
+import com.helloworld.jwt.security.IsAdmin;
 import com.helloworld.jwt.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.modelmapper.ModelMapper;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 
 @RestController
 @RequestMapping("/users")
@@ -38,6 +40,7 @@ public class LoginController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"), 
             @ApiResponse(code = 422, message = "Invalid username/password supplied")})
+    @Transactional
     public String login(
                         @ApiParam("Username") @RequestParam String username, 
                         @ApiParam("Password") @RequestParam String password) {
@@ -56,7 +59,7 @@ public class LoginController {
     }
 
     @DeleteMapping(value = "/{username}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @IsAdmin
     @ApiOperation(value = "${LoginController.delete}")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"), 
@@ -69,19 +72,19 @@ public class LoginController {
     }
 
     @GetMapping(value = "/{username}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "${LoginController.search}", response = UserResponseDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"), 
             @ApiResponse(code = 403, message = "Access denied"), 
             @ApiResponse(code = 404, message = "The user doesn't exist"), 
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    @Transactional
     public UserResponseDTO search(@ApiParam("Username") @PathVariable String username) {
         return modelMapper.map(userService.search(username), UserResponseDTO.class);
     }
 
     @GetMapping(value = "/me")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    @Transactional
     @ApiOperation(value = "${LoginController.me}", response = UserResponseDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"), 
@@ -93,6 +96,7 @@ public class LoginController {
 
     @GetMapping("/refresh")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    @Transactional
     public String refresh(HttpServletRequest req) {
         return userService.refresh(req.getRemoteUser());
     }
