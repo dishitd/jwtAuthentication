@@ -1,5 +1,7 @@
 package com.helloworld.jwt.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.CollectionTable;
@@ -17,6 +19,8 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @Entity
+@Builder
+@AllArgsConstructor
 @Table(name = "\"USER\"")
 public class User {
 
@@ -37,6 +41,4 @@ public class User {
             joinColumns = @JoinColumn(name="id"))
     @Column(name="role_name")
     private Set<String> userRoles;
-
-
 }

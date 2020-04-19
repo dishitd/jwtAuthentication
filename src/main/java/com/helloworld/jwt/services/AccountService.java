@@ -22,7 +22,7 @@ public class AccountService implements UserDetailsService {
 
     @Transactional
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         final User user = userRepository.findByUsername(username);
 
         if (user == null) {
