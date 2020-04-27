@@ -56,7 +56,8 @@ public class UserService {
         userRepository.deleteByUsername(username);
     }
 
-    @IsViewer
+
+    @IsAdmin
     public User search(String username) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
