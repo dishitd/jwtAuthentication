@@ -16,14 +16,3 @@ CREATE TABLE pms."user" (
 );
 
 ALTER TABLE pms."user" ADD CONSTRAINT user_pk PRIMARY KEY (id);
-
-CREATE TABLE pms.user_profile (
-	user_id smallint NOT NULL,
-	"role" varchar NOT NULL
-	);
-
-ALTER TABLE pms."user_profile" ADD CONSTRAINT user_pk PRIMARY KEY (id);
--- Column comments
-
-COMMENT ON COLUMN pms.user_profile."role" IS 'user role such as admin, user';
-
